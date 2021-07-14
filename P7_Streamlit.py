@@ -7,10 +7,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 import plotly.express as px
+import os
 
 sns.set_style('dark')
 
-data_dashboard = pd.read_csv('C:\\Users\\marti\\Notebooks\\OC_Projet_7\\data_dashboard.csv')
+os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
+
+data_dashboard = pd.read_csv('data_dashboard.csv')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 
 # définition des listes
@@ -68,15 +71,15 @@ col1, col2, col3, col4, col5, col6 = st.beta_columns([0.3, 0.05, 1, 0.05, 1, 1])
 
 # ----- col1
 if (genre == 'M'):
-    image = cv2.imread('C:\\Users\\marti\\Notebooks\\OC_Projet_7\\gender_M.png', cv2.IMREAD_UNCHANGED)
+    image = cv2.imread('gender_M.png', cv2.IMREAD_UNCHANGED)
 else:
-    image = cv2.imread('C:\\Users\\marti\\Notebooks\\OC_Projet_7\\gender_F.png', cv2.IMREAD_UNCHANGED)
+    image = cv2.imread('gender_F.png', cv2.IMREAD_UNCHANGED)
 cv2.imshow('Image', image)
 col1.image(image, caption=genre, width=60)
 
 # ----- col2 - BARRE
 
-barre = cv2.imread('C:\\Users\\marti\\Notebooks\\OC_Projet_7\\barre.png', cv2.IMREAD_UNCHANGED)
+barre = cv2.imread('barre.png', cv2.IMREAD_UNCHANGED)
 cv2.imshow('Image', barre)
 col2.image(barre, width=25)
 
@@ -95,7 +98,7 @@ col3.markdown('<p class="client">AGE</p>', unsafe_allow_html=True)
 col3.markdown('<p class="client">{} ans</p>'.format(age), unsafe_allow_html=True)
 
 # ----- col4 - BARRE
-barre = cv2.imread('C:\\Users\\marti\\Notebooks\\OC_Projet_7\\barre.png', cv2.IMREAD_UNCHANGED)
+barre = cv2.imread('barre.png', cv2.IMREAD_UNCHANGED)
 cv2.imshow('Image', barre)
 col4.image(barre, width=25)
 
@@ -110,8 +113,8 @@ col5.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-col5.markdown('<p class="infos">CARRIERE</p>', unsafe_allow_html=True)
-col5.markdown('<p class="infos">{} ans</p>'.format(duree_carriere), unsafe_allow_html=True)
+col5.markdown('<p class="client">CARRIERE</p>', unsafe_allow_html=True)
+col5.markdown('<p class="client">{} ans</p>'.format(duree_carriere), unsafe_allow_html=True)
 
 
 
@@ -124,9 +127,11 @@ fig = go.Figure(go.Indicator(
     delta = {'reference': 45},
     gauge = {'axis': {'range': [None, 100]},
              'steps' : [
-                 {'range': [0, 45], 'color': "lightgray"},
-                 {'range': [45, 100], 'color': "gray"}],
-             'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 45}}))
+                 {'range': [0, 45], 'color': "green"},
+                 {'range': [45, 80], 'color': "orange"},
+                 {'range': [80, 100], 'color': "red"}],
+             'bar': {'color': "white"},
+             'threshold' : {'line': {'color': "white", 'width': 4}, 'thickness': 0.75, 'value': 45}}))
 st.plotly_chart(fig)
 
 # ----- Texte prediction
@@ -151,7 +156,7 @@ if ((client_proba >= 45) & (client_proba < 80)):
 if (client_proba >= 80):
     col22.markdown('<p class="prediction"><span style="color:red">risque de défaut de paiement</span></p>', unsafe_allow_html=True)
 
-st.markdown('<p class="infos"><i>Probabilité de défaut de paiement moyen de la catégorie selectionée : {} %</i></p>'.format(moyenne_proba), unsafe_allow_html=True)
+st.markdown('<p class="infos"><i>Probabilité de défaut de paiement moyenne de la catégorie selectionnée : {} %</i></p>'.format(moyenne_proba), unsafe_allow_html=True)
 
 
 st.markdown("-------------------------------------------------")

@@ -9,35 +9,40 @@ import plotly.graph_objects as go
 import plotly.express as px
 import os
 
-sns.set_style('dark')
+sns.set_style("darkgrid")
 
+# /!\ Utiliser le thème "Dark" (Settings -> Theme) /!\
+
+# import des données
 os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
-
 data_dashboard = pd.read_csv('data_dashboard.csv')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 
-# définition des listes
+# définition des listes/curseurs de sélection
 age_category_list = (sorted(data_dashboard['categorie_age'].unique()))
-revenus_range = data_dashboard['revenus'].max().astype(int).item()
 age_category_list.append('Toutes')
+revenus_max = data_dashboard['revenus'].max().astype(int).item()
 
-# --- Titre
+
+# --- Titre ---
 st.write("""# Dashboard HOME CREDIT""")
 st.markdown("-------------------------------------------------")
 
-# --- Sidebar
+# --- Sidebar ---
 st.sidebar.header('Sélection et filtres :')
 
+# inputs :
 def inputs():
     age_category = st.sidebar.selectbox("Catégorie d'age", age_category_list, 4)
-    revenus_limit = st.sidebar.slider('Revenus max', 0, revenus_range, revenus_range)
+    revenus_limit = st.sidebar.slider('Revenus limites :', 0, revenus_max, (0, revenus_max))
     return age_category, revenus_limit
 
 age_category, revenus_limit = inputs()
 
 st.sidebar.markdown("-------------------------------------------------")
 
-filtre_revenus = (data_dashboard['revenus'] <= revenus_limit)
+# stockage des 2 selections dans 2 filtres
+filtre_revenus = ((data_dashboard['revenus'] >= revenus_limit[0]) & (data_dashboard['revenus'] <= revenus_limit[1]))
 if (age_category != 'Toutes'):
     filtre_age = (data_dashboard['categorie_age'] == age_category)
 else:
@@ -46,44 +51,51 @@ else:
 client_list = list(data_dashboard[filtre_age & filtre_revenus]['client'])
 client = st.sidebar.selectbox('Client :', client_list)
 
+st.markdown("""
+<style>
+.big-font {
+    font-size:18px !important;
+    text-align: left;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.write("""# CLIENT :""")
 st.markdown('<p class="big-font">N° {}</p>'.format(client), unsafe_allow_html=True)
 
 st.sidebar.markdown("-------------------------------------------------")
 
-# --- Variables client
+# --- Variables client et catégorie ---
+# variables majeures
 client_proba = round((data_dashboard[data_dashboard['client'] == client]['proba'])*100, 0).astype(int).item()
 genre = data_dashboard[data_dashboard['client'] == client]['genre'].astype(str).item()
 age = data_dashboard[data_dashboard['client'] == client]['age'].astype(int).item()
 duree_carriere = data_dashboard[data_dashboard['client'] == client]['duree_emploi'].astype(int).item()
-
 
 # infos complémentaires
 proprietaire = data_dashboard[data_dashboard['client'] == client]['proprietaire'].astype(str).item()
 montant_credit = data_dashboard[data_dashboard['client'] == client]['montant_credit'].astype(int).item()
 enfants = data_dashboard[data_dashboard['client'] == client]['enfants'].astype(int).item()
 
-# variables catégorie de client_list
+# variables sur la catégorie de clients selectionnée
 moyenne_proba = round((data_dashboard[filtre_age & filtre_revenus]['proba'].mean())*100, 0).astype(int).item()
 
-# --- Séparation des colonnées
+# affichage variables majeures : séparation des colonnes
 col1, col2, col3, col4, col5, col6 = st.beta_columns([0.3, 0.05, 1, 0.05, 1, 1])
 
-# ----- col1
+# col1 - GENRE
 if (genre == 'M'):
     image = cv2.imread('gender_M.png', cv2.IMREAD_UNCHANGED)
 else:
     image = cv2.imread('gender_F.png', cv2.IMREAD_UNCHANGED)
-cv2.imshow('Image', image)
 col1.image(image, caption=genre, width=60)
 
-# ----- col2 - BARRE
+# col2 - BARRE png
 
 barre = cv2.imread('barre.png', cv2.IMREAD_UNCHANGED)
-cv2.imshow('Image', barre)
 col2.image(barre, width=25)
 
-# ---- col 3  AGE ----
+# col 3 - AGE
 col3.markdown("""
 <style>
 .client {
@@ -93,32 +105,20 @@ col3.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
 col3.markdown('<p class="client">AGE</p>', unsafe_allow_html=True)
 col3.markdown('<p class="client">{} ans</p>'.format(age), unsafe_allow_html=True)
 
-# ----- col4 - BARRE
-barre = cv2.imread('barre.png', cv2.IMREAD_UNCHANGED)
-cv2.imshow('Image', barre)
+# col4 - BARRE png
 col4.image(barre, width=25)
 
-
-# ---- col 5 CARRIERE ----
-col5.markdown("""
-<style>
-.infos {
-    font-size:18px !important;
-    text-align: left;
-}
-</style>
-""", unsafe_allow_html=True)
+# col 5 - CARRIERE
+col5.markdown("") # pour aligner avec AGE
 
 col5.markdown('<p class="client">CARRIERE</p>', unsafe_allow_html=True)
 col5.markdown('<p class="client">{} ans</p>'.format(duree_carriere), unsafe_allow_html=True)
 
 
-
-# ----- JAUGE
+# --- JAUGE ---
 fig = go.Figure(go.Indicator(
     domain = {'x': [0, 1], 'y': [0, 1]},
     value = client_proba,
@@ -130,11 +130,11 @@ fig = go.Figure(go.Indicator(
                  {'range': [0, 45], 'color': "green"},
                  {'range': [45, 80], 'color': "orange"},
                  {'range': [80, 100], 'color': "red"}],
-             'bar': {'color': "white"},
+             'bar': {'color': "lightgray"},
              'threshold' : {'line': {'color': "white", 'width': 4}, 'thickness': 0.75, 'value': 45}}))
 st.plotly_chart(fig)
 
-# ----- Texte prediction
+# --- Texte prediction ---
 
 st.markdown("""
 <style>
@@ -156,13 +156,13 @@ if ((client_proba >= 45) & (client_proba < 80)):
 if (client_proba >= 80):
     col22.markdown('<p class="prediction"><span style="color:red">risque de défaut de paiement</span></p>', unsafe_allow_html=True)
 
-st.markdown('<p class="infos"><i>Probabilité de défaut de paiement moyenne de la catégorie selectionnée : {} %</i></p>'.format(moyenne_proba), unsafe_allow_html=True)
+st.markdown('<p class="big-font"><i>Probabilité de défaut de paiement moyenne de la catégorie selectionnée : {} %</i></p>'.format(moyenne_proba), unsafe_allow_html=True)
 
 
 st.markdown("-------------------------------------------------")
 
 
-# infos complémentaires
+# --- infos complémentaires ---
 st.markdown("""
 <style>
 .compl {
@@ -187,11 +187,7 @@ col32.markdown('<p class="compl"><span style="color:green">{}</span></p>'.format
 col31.markdown("<p class='compl'>Nombre d'enfants :</p>", unsafe_allow_html=True)
 col32.markdown('<p class="compl"><span style="color:green">{}</span></p>'.format(enfants), unsafe_allow_html=True)
 
-
-
-
-# --- Histogramme âges
-
+# --- Histogramme âges ---
 
 if st.sidebar.checkbox("Histogramme des âges",value=True):
 
@@ -208,7 +204,6 @@ if st.sidebar.checkbox("Histogramme des âges",value=True):
     ax.xaxis.label.set_color('white')
     ax.hist(y, bins=20, color="green")
     st.pyplot(fig)
-
 
 
 # --- Histogramme revenus
@@ -230,6 +225,6 @@ if st.sidebar.checkbox("Histogramme des revenus",value=True):
 
 st.markdown("-------------------------------------------------")
 
-# Data
+# --- Data
 st.markdown("<p class='big-font'>Données :</p>", unsafe_allow_html=True)
 st.write(data_dashboard[filtre_age & filtre_revenus])

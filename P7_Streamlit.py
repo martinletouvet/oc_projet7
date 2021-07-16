@@ -16,7 +16,7 @@ sns.set_style("darkgrid")
 # import des données
 # os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
 # os.chdir('https://raw.githubusercontent.com/martinletouvet/oc_projet7')
-data_dashboard = pd.read_csv('https://raw.githubusercontent.com/martinletouvet/oc_projet7/data_dashboard.csv')
+data_dashboard = pd.read_csv('https://raw.githubusercontent.com/martinletouvet/oc_projet7/data_dashboard.csv?raw=true')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 
 # définition des listes/curseurs de sélection
@@ -86,9 +86,11 @@ col1, col2, col3, col4, col5, col6 = st.beta_columns([0.3, 0.05, 1, 0.05, 1, 1])
 
 # col1 - GENRE
 if (genre == 'M'):
-    image = cv2.imread('gender_M.png', cv2.IMREAD_UNCHANGED)
+    # image = cv2.imread('gender_M.png', cv2.IMREAD_UNCHANGED)
+    image = cv2.imread('https://raw.githubusercontent.com/martinletouvet/oc_projet7/gender_M.png?raw=true', cv2.IMREAD_UNCHANGED)
 else:
-    image = cv2.imread('gender_F.png', cv2.IMREAD_UNCHANGED)
+    # image = cv2.imread('gender_F.png', cv2.IMREAD_UNCHANGED)
+    image = cv2.imread('https://raw.githubusercontent.com/martinletouvet/oc_projet7/gender_F.png?raw=true', cv2.IMREAD_UNCHANGED)
 col1.image(image, caption=genre, width=60)
 
 # col2 - BARRE png

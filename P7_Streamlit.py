@@ -1,20 +1,21 @@
-import streamlit as st
-import numpy as np
-import pandas as pd
 import cv2 as cv2
 import matplotlib
 import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
+import os
+import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-import os
+import seaborn as sns
+import streamlit as st
 
 sns.set_style("darkgrid")
 
 # /!\ Utiliser le thème "Dark" (Settings -> Theme) /!\
 
 # import des données
-os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
+# os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
+os.chdir('https://github.com/martinletouvet/oc_projet7')
 data_dashboard = pd.read_csv('data_dashboard.csv')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 

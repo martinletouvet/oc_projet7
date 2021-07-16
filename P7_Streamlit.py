@@ -15,7 +15,7 @@ sns.set_style("darkgrid")
 
 # import des données
 # os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
-os.chdir('https://github.com/martinletouvet/oc_projet7')
+os.chdir('https://raw.githubusercontent.com/martinletouvet/oc_projet7')
 data_dashboard = pd.read_csv('data_dashboard.csv')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 

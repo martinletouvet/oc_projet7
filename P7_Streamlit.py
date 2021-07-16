@@ -15,8 +15,8 @@ sns.set_style("darkgrid")
 
 # import des données
 # os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
-os.chdir('https://raw.githubusercontent.com/martinletouvet/oc_projet7')
-data_dashboard = pd.read_csv('data_dashboard.csv')
+# os.chdir('https://raw.githubusercontent.com/martinletouvet/oc_projet7')
+data_dashboard = pd.read_csv('https://raw.githubusercontent.com/martinletouvet/oc_projet7/data_dashboard.csv')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
 
 # définition des listes/curseurs de sélection

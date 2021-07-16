@@ -1,7 +1,7 @@
 matplotlib
 matplotlib-inline==0.1.2
 numpy==1.21.0
-opencv-contrib-python==4.5.2.52
+opencv-python-headless==4.5.2.52
 pandas
 plotly
 seaborn

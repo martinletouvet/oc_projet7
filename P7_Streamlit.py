@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import seaborn as sns
 import streamlit as st
+import urllib.request
 
 sns.set_style("darkgrid")
 
@@ -16,8 +17,29 @@ sns.set_style("darkgrid")
 # import des données
 # os.chdir('C:\\Users\\marti\\Notebooks\\OC_Projet_7')
 # os.chdir('https://raw.githubusercontent.com/martinletouvet/oc_projet7')
-data_dashboard = pd.read_csv('https://raw.githubusercontent.com/martinletouvet/oc_projet7/data_dashboard.csv?raw=true')
+data_dashboard = pd.read_csv('https://raw.githubusercontent.com/martinletouvet/oc_projet7/master/data_dashboard.csv?raw=true')
 data_dashboard = data_dashboard.sort_values('client', ascending=True)
+
+# import des images
+# -------------------------------------------------
+# barre
+url = 'https://raw.githubusercontent.com/martinletouvet/oc_projet7/master/barre.png'
+url_response = urllib.request.urlopen(url)
+img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
+barre = cv2.imdecode(img_array, -1)
+
+# genre M
+url = 'https://raw.githubusercontent.com/martinletouvet/oc_projet7/master/gender_M.png'
+url_response = urllib.request.urlopen(url)
+img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
+gender_M = cv2.imdecode(img_array, -1)
+
+# genre F
+url = 'https://raw.githubusercontent.com/martinletouvet/oc_projet7/master/gender_F.png'
+url_response = urllib.request.urlopen(url)
+img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
+gender_F = cv2.imdecode(img_array, -1)
+# -------------------------------------------------
 
 # définition des listes/curseurs de sélection
 age_category_list = (sorted(data_dashboard['categorie_age'].unique()))
@@ -84,18 +106,14 @@ moyenne_proba = round((data_dashboard[filtre_age & filtre_revenus]['proba'].mean
 # affichage variables majeures : séparation des colonnes
 col1, col2, col3, col4, col5, col6 = st.beta_columns([0.3, 0.05, 1, 0.05, 1, 1])
 
-# col1 - GENRE
+# # col1 - GENRE
 if (genre == 'M'):
-    # image = cv2.imread('gender_M.png', cv2.IMREAD_UNCHANGED)
-    image = cv2.imread('https://raw.githubusercontent.com/martinletouvet/oc_projet7/gender_M.png?raw=true', cv2.IMREAD_UNCHANGED)
+    image1 = gender_M
 else:
-    # image = cv2.imread('gender_F.png', cv2.IMREAD_UNCHANGED)
-    image = cv2.imread('https://raw.githubusercontent.com/martinletouvet/oc_projet7/gender_F.png?raw=true', cv2.IMREAD_UNCHANGED)
-col1.image(image, caption=genre, width=60)
+    image1 = gender_F
+col1.image(image1, caption=genre, width=60)
 
 # col2 - BARRE png
-
-barre = cv2.imread('barre.png', cv2.IMREAD_UNCHANGED)
 col2.image(barre, width=25)
 
 # col 3 - AGE
@@ -138,7 +156,6 @@ fig = go.Figure(go.Indicator(
 st.plotly_chart(fig)
 
 # --- Texte prediction ---
-
 st.markdown("""
 <style>
 .prediction {
@@ -146,7 +163,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 col21, col22 = st.beta_columns([2,6])
 
@@ -160,7 +176,6 @@ if (client_proba >= 80):
     col22.markdown('<p class="prediction"><span style="color:red">risque de défaut de paiement</span></p>', unsafe_allow_html=True)
 
 st.markdown('<p class="big-font"><i>Probabilité de défaut de paiement moyenne de la catégorie selectionnée : {} %</i></p>'.format(moyenne_proba), unsafe_allow_html=True)
-
 
 st.markdown("-------------------------------------------------")
 
@@ -182,7 +197,6 @@ col31, col32, col33 = st.beta_columns([0.5, 1, 1])
 col31.markdown("<p class='compl'>Montant du crédit :</p>", unsafe_allow_html=True)
 col32.markdown('<p class="compl"><span style="color:green">{} $</span></p>'.format(montant_credit), unsafe_allow_html=True)
 
-
 proprietaire_french = 'Oui' if proprietaire == 'Y' else 'Non'
 col31.markdown('<p class="compl">Propriétaire :</p>', unsafe_allow_html=True)
 col32.markdown('<p class="compl"><span style="color:green">{}</span></p>'.format(proprietaire_french), unsafe_allow_html=True)
@@ -191,7 +205,6 @@ col31.markdown("<p class='compl'>Nombre d'enfants :</p>", unsafe_allow_html=True
 col32.markdown('<p class="compl"><span style="color:green">{}</span></p>'.format(enfants), unsafe_allow_html=True)
 
 # --- Histogramme âges ---
-
 if st.sidebar.checkbox("Histogramme des âges",value=True):
 
     st.markdown("-------------------------------------------------")

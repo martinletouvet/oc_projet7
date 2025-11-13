@@ -47,7 +47,7 @@ age_category_list.append('Toutes')
 revenus_max = data_dashboard['revenus'].max().astype(int).item()
 
 st.set_page_config(page_title="Home Credit - Client Scoring",
-                   page_icon=":money_with_wings:",
+                   #page_icon=":money_with_wings:",
                    layout='wide')
 # --- Titre ---
 st.write("""# Dashboard HOME CREDIT""")

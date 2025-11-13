@@ -1,6 +1,7 @@
 matplotlib
 matplotlib-inline==0.1.2
 numpy==1.21.0
+protobuf==3.20.*
 opencv-python-headless==4.5.2.52
 pandas
 plotly

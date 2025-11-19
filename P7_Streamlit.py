@@ -106,7 +106,7 @@ enfants = data_dashboard[data_dashboard['client'] == client]['enfants'].astype(i
 moyenne_proba = round((data_dashboard[filtre_age & filtre_revenus]['proba'].mean())*100, 0).astype(int).item()
 
 # affichage variables majeures : séparation des colonnes
-col1, col2, col3, col4, col5, col6 = st.beta_columns([0.3, 0.05, 1, 0.05, 1, 1])
+col1, col2, col3, col4, col5, col6 = st.columns([0.3, 0.05, 1, 0.05, 1, 1])
 
 # # col1 - GENRE
 if (genre == 'M'):
@@ -166,7 +166,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-col21, col22 = st.beta_columns([2,6])
+col21, col22 = st.columns([2,6])
 
 col21.markdown('<p class="prediction">Prédiction : </p>', unsafe_allow_html=True)
 
@@ -194,7 +194,7 @@ st.markdown("""
 
 st.markdown('<p class="big-font">Informations complémentaires client :</p>', unsafe_allow_html=True)
 
-col31, col32, col33 = st.beta_columns([0.5, 1, 1])
+col31, col32, col33 = st.columns([0.5, 1, 1])
 
 col31.markdown("<p class='compl'>Montant du crédit :</p>", unsafe_allow_html=True)
 col32.markdown('<p class="compl"><span style="color:green">{} $</span></p>'.format(montant_credit), unsafe_allow_html=True)

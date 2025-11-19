@@ -6,4 +6,4 @@ opencv-python-headless==4.5.2.52
 pandas
 plotly
 seaborn
-streamlit==0.84.0
+streamlit
